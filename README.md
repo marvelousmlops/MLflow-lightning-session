@@ -1,2 +1,2 @@
-# mlflow-genai-lightening-session
-Example code for genai application with mlflow
+# mlflow-lightning-session
+Example code for AI application with MLflow
