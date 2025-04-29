@@ -1,0 +1,48 @@
+[project]
+name = "postai"
+version = "0.1.0"
+description = "A project for generating social media posts using AI with MLflow integration"
+
+dependencies = [
+    "mlflow==2.17.0",
+    "requests==2.31.0",
+    "markdownify==0.11.6",
+    "openai==0.27.8",
+    "pydantic==2.9.2",
+    "databricks-sdk==0.32.0"
+]
+
+[project.optional-dependencies]
+dev = [
+    "databricks-connect>=15.4.1, <16",
+    "ipykernel>=6.29.5, <7",
+    "pip>=24.2",
+    "pre-commit>=4.1.0, <5"
+]
+
+[build-system]
+requires = [
+    "setuptools>=72.0"
+]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["postai*"]
+
+[tool.ruff]
+line-length = 120
+select = [
+    "F",  # pyflakes rules
+    "E",  # pycodestyle error rules
+    "W",  # pycodestyle warning rules
+    "B",  # flake8-bugbear rules
+    "I",  # isort rules
+]
+
+ignore = [
+    "E501",  # line-too-long
+]
+
+[tool.ruff.format]
+indent-style = "space"
