@@ -8,7 +8,7 @@ from typing import List
 from openai import OpenAI
 from mlflow import MlflowClient
 from mlflow.models import set_model
-
+from mlflow.exceptions import MlflowException
 
 class SocialPostInput(BaseModel):
     example_posts: List[str]
@@ -119,6 +119,14 @@ class SocialPoster(PythonModel):
         "openai",
         "markdownify",
         ]
+
+        try:
+            self.mlflow_client.get_registered_model(model_name)
+        except MlflowException as e:
+            if "RESOURCE_DOES_NOT_EXIST" in str(e):
+                self.mlflow_client.create_registered_model(model_name)
+            else:
+                raise
 
         with mlflow.start_run():
             model_info = mlflow.pyfunc.log_model(
