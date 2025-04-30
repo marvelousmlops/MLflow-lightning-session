@@ -123,7 +123,7 @@ import mlflow
 
 sample_input = [{
     "example_posts": ["Example 1: This is an example post.", "Example 2: This is another example post."],
-    "context_url": "https://www.example.com",
+    "context_url": "https://mlflow.org/docs/latest/llms/",
     "additional_instructions": "The post should be concise and to the point..."
 }]
 
