@@ -1,5 +1,5 @@
 # Databricks notebook source
-!pip install markdownify openai
+# MAGIC !pip install -e .
 
 # COMMAND ----------
 
@@ -8,20 +8,13 @@
 # COMMAND ----------
 
 import os
+from postai.model import SocialPoster
+from postai.model_serving import ModelServing
 
 os.environ["OPENAI_API_KEY"] = dbutils.secrets.get(scope="mlflow_genai", key="OPENAI_API_KEY")
 os.environ["GEMINI_API_KEY"] = dbutils.secrets.get(scope="mlflow_genai", key="GEMINI_API_KEY")
 
-
 # COMMAND ----------
-
-from postai.model import SocialPoster
-from postai.model_serving import ModelServing
-
-# COMMAND ----------
-
-
-import os
 
 system_prompt = """You are a social media content specialist with expertise in matching writing styles and voice across platforms. Your task is to:
 1. Analyze the provided example post(s) by examining:
@@ -58,7 +51,8 @@ model = SocialPoster(config)
 
 # COMMAND ----------
 
-model_info = model.log_and_register_model("social_poster")
+model_info = model.log_and_register_model(artifact_path="social_poster",
+                                          model_name="mlflow_lightening_session.dev.social-ai")
 
 # COMMAND ----------
 
@@ -140,9 +134,9 @@ model.predict(sample_input)
 
 # COMMAND ----------
 
-endpoint_name = "social-ai-prod"
+endpoint_name = "social-ai"
 model_server = ModelServing(
-    model_name="mlflow_lightening_session.dev.social-ai-staging",
+    model_name="mlflow_lightening_session.dev.social-ai",
     endpoint_name=endpoint_name,
 )
 model_server.deploy_or_update_serving_endpoint()
