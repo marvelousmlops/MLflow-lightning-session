@@ -8,7 +8,6 @@ dependencies = [
     "requests==2.31.0",
     "markdownify==0.11.6",
     "openai==1.76.2",
-    "pydantic==2.9.2",
     "databricks-sdk==0.32.0"
 ]
 

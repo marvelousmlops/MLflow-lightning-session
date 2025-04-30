@@ -21,7 +21,7 @@ class SocialPostOutput(BaseModel):
 
 
 class SocialPoster(PythonModel):
-    def __init__(self, config=None):
+    def __init__(self, config=None, experiment_name="/Shared/social-poster"):
         default_config = {
             "system_prompt": (
                 "You are a social media content specialist with expertise in matching writing "
@@ -47,6 +47,7 @@ class SocialPoster(PythonModel):
         self.config = config if config else default_config
         self.tracing_enabled = False
         self.mlflow_client = MlflowClient()
+        self.experiment_name = experiment_name
 
     @mlflow.trace(span_type="FUNCTION")
     def _webpage_to_markdown(self, url):
@@ -114,11 +115,9 @@ class SocialPoster(PythonModel):
             parent_span.set_outputs({"post": post})
         return [{"post": post}]
 
-    def log_and_register_model(self, artifact_path, model_name):
-        pip_requirements = [
-        "openai",
-        "markdownify",
-        ]
+    def log_and_register_model(self, artifact_path, model_name, code_path):
+        # Set experiment name
+        mlflow.set_experiment(self.experiment_name)
 
         try:
             self.mlflow_client.get_registered_model(model_name)
@@ -131,9 +130,8 @@ class SocialPoster(PythonModel):
         with mlflow.start_run():
             model_info = mlflow.pyfunc.log_model(
                 artifact_path,
-                python_model=self,
+                python_model=code_path,
                 model_config=self.config,
-                pip_requirements=pip_requirements,
             )
 
             mv = self.mlflow_client.create_model_version(
