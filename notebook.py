@@ -127,7 +127,7 @@ sample_input = [{
     "additional_instructions": "The post should be concise and to the point..."
 }]
 
-model_uri = f"models:/mlflow_lightening_session.dev.social-ai-staging@latest-model"
+model_uri = f"models:/mlflow_lightening_session.dev.social-ai@latest-model"
 model = mlflow.pyfunc.load_model(model_uri)
 model.predict(sample_input)
 
